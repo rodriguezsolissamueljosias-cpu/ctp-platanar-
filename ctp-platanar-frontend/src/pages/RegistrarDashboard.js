@@ -40,7 +40,7 @@ export default function RegistrarDashboard({ teacher }) {
       }
     };
     loadLists();
-  }, [teacher]);
+  }, [teacher, grade, section]);
 
   const addStudent = async () => {
     if (!name || !grade || !section || !parentEmail) {

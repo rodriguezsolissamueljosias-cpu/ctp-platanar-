@@ -17,7 +17,7 @@ export default function TeacherProfile({ teacher, setSection }) {
         .catch(err => console.error('Error al obtener estudiantes:', err))
         .finally(() => setLoading(false));
     }
-  }, [teacher.teacherId]);
+  }, [teacher]);
 
   const addStudent = async () => {
     if (!name || !grade || !section || !parentEmail) {
