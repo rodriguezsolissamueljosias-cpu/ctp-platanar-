@@ -21,12 +21,12 @@ const Auth = ({ setToken, setTeacher }) => {
     try {
       if (isRegister) {
         // Registro de profesor
-        await axios.post('http://localhost:5000/api/auth/register', formData);
+        await apiClient.post('/auth/register', formData);
         alert('Profesor registrado exitosamente');
         setIsRegister(false); // después de registrar, pasa a login
       } else {
         // Inicio de sesión
-        const res = await axios.post('http://localhost:5000/api/auth/login', {
+        const res = await apiClient.post('/auth/login', {
           email: formData.email,
           password: formData.password
         });

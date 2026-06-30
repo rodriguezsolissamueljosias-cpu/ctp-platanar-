@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from './utils/api';
 import './TeacherDashboard.css';
 
 function TeacherDashboard({ teacher }) {
@@ -7,16 +7,17 @@ function TeacherDashboard({ teacher }) {
 
   useEffect(() => {
     if (teacher && teacher.teacherId) {
-      axios.get(`http://localhost:5000/api/students/${teacher.teacherId}`)
+      apiClient.get(`/students/${teacher.teacherId}`)
         .then(res => setStudents(res.data))
         .catch(err => console.error("Error al cargar estudiantes:", err));
     }
   }, [teacher]);
 
   const markAttendance = (studentId, status) => {
-      axios.put(`http://localhost:5000/api/students/${studentId}/attendance`, {
+      apiClient.put(`/students/${studentId}/attendance`, {
       status,
-      teacherId: teacher.teacherId
+      teacherId: teacher.teacherId,
+      date: new Date().toISOString()
     })
       .then(res => {
         setStudents(students.map(s => s.id === studentId ? (res.data.student || s) : s));
@@ -26,7 +27,7 @@ function TeacherDashboard({ teacher }) {
 
   const handleDelete = (studentId) => {
     if (!window.confirm('¿Seguro que desea eliminar este estudiante?')) return;
-    axios.delete(`http://localhost:5000/api/students/${studentId}`)
+    apiClient.delete(`/students/${studentId}`)
       .then(() => setStudents(prev => prev.filter(s => s.id !== studentId)))
       .catch(err => alert('Error al eliminar estudiante'));
   };

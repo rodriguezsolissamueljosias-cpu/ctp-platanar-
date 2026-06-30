@@ -7,6 +7,8 @@ import AttendanceDashboard from './pages/AttendanceDashboard';
 import JustificationDashboard from './pages/JustificationDashboard';
 import StudentsDashboard from './pages/StudentsDashboard';
 import RegistrarDashboard from './pages/RegistrarDashboard';
+import CreateSectionsDashboard from './pages/CreateSectionsDashboard';
+import RegisteredStudentsDashboard from './pages/RegisteredStudentsDashboard';
 import Settings from './components/Settings';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -64,6 +66,9 @@ function App() {
               <span role="img" aria-label="Estudiantes">📊</span>
               <span className="nav-link-text">Panel de estudiantes</span>
             </Link>
+            <Link to="/sections" className="nav-link">
+              🏗️ Crear Secciones
+            </Link>
             <Link to="/registrar" className="nav-link">
               📝 Registrador
             </Link>
@@ -103,7 +108,9 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<StudentsDashboard teacher={teacher} setSection={setSection} section={section} />} />
+            <Route path="/sections" element={<CreateSectionsDashboard />} />
             <Route path="/registrar" element={<RegistrarDashboard teacher={teacher} />} />
+            <Route path="/registrados" element={<RegisteredStudentsDashboard teacher={teacher} />} />
             <Route path="/attendance" element={<AttendanceDashboard section={section} teacher={teacher} />} />
             <Route path="/justifications" element={<JustificationDashboard section={section} />} />
             <Route path="/profile" element={<TeacherProfile teacher={teacher} setSection={setSection} />} />

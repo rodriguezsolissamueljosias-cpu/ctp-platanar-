@@ -17,7 +17,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npx concurrently \"cd ../ctp-platanar-backend && npm start\" \"react-scripts start\"",
+    "start": "npx concurrently \"cd ../ctp-platanar-backend && npm start\" \"set HOST=0.0.0.0&&react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

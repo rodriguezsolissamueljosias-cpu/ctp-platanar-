@@ -9,8 +9,6 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sections, setSections] = useState([]);
   const [sectionsLoading, setSectionsLoading] = useState(false);
-  const [newSectionName, setNewSectionName] = useState('');
-  const [sectionError, setSectionError] = useState('');
   const navigate = useNavigate();
 
   const filteredStudents = students.filter(s =>
@@ -63,49 +61,6 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
   };
 
 
-  const createSection = async () => {
-    const name = newSectionName.trim();
-    if (!name) {
-      setSectionError('Ingresa un nombre de sección válido');
-      return;
-    }
-    if (sections.some(s => s.name.toLowerCase() === name.toLowerCase())) {
-      setSectionError('Esa sección ya existe');
-      return;
-    }
-    try {
-      await sectionAPI.create({ name });
-      const res = await sectionAPI.getAll();
-      setSections(res.data || []);
-      setSection(name);
-      setNewSectionName('');
-      setSectionError('');
-    } catch (err) {
-      console.error(err);
-      const message = err.response?.data?.error || err.response?.data?.message || err.message || 'Error al crear la sección';
-      setSectionError(message);
-      alert(message);
-    }
-  };
-
-  const deleteSection = async () => {
-    if (!section) return alert('No hay sección seleccionada');
-    const found = sections.find(s => s.name === section);
-    if (!found) return alert('Sección no encontrada en la lista');
-    if (!window.confirm(`Eliminar la sección "${section}"? Esto no eliminará estudiantes automáticamente.`)) return;
-    try {
-      await sectionAPI.delete(found.id);
-      const res = await sectionAPI.getAll();
-      setSections(res.data || []);
-      // set to first available or empty
-      if (res.data && res.data.length > 0) setSection(res.data[0].name);
-      else setSection('');
-    } catch (err) {
-      console.error(err);
-      alert('Error al eliminar la sección');
-    }
-  };
-
   return (
     <div className="students-dashboard">
       <div className="container">
@@ -127,19 +82,6 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
               ))
             )}
           </select>
-          <div className="section-actions">
-            <div className="section-create">
-              <input
-                className="section-create-input"
-                placeholder="Nueva sección (ej: 9-1)"
-                value={newSectionName}
-                onChange={(e) => { setNewSectionName(e.target.value); setSectionError(''); }}
-              />
-              <button className="btn-small" onClick={createSection}>➕ Crear</button>
-            </div>
-            <button className="btn-small btn-danger" onClick={deleteSection}>🗑️ Eliminar</button>
-          </div>
-          {sectionError && <p className="section-error">{sectionError}</p>}
           <div className="search-field">
             <label htmlFor="student-search">Buscar estudiante:</label>
             <input
@@ -162,6 +104,12 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
           </button>
           <button 
             className="btn-secondary"
+            onClick={() => navigate('/sections')}
+          >
+            🏗️ Crear Secciones
+          </button>
+          <button 
+            className="btn-success"
             onClick={() => navigate('/attendance')}
           >
             ✓ Pasar Asistencia

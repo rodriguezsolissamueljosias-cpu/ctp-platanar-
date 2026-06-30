@@ -24,11 +24,20 @@ if (databaseUrl) {
   console.log('📌 Usando DATABASE_URL para la conexión a la base de datos');
   sequelize = new Sequelize(databaseUrl, sequelizeOptions);
 } else {
-  const dialect = dbDialect || (isProduction ? 'sqlite' : hasSqlConfig ? 'mysql' : 'sqlite');
+  const dialect = dbDialect || (hasSqlConfig ? 'mysql' : 'sqlite');
   console.log(`📌 Configurando base de datos local con dialecto: ${dialect}`);
 
+  if (isProduction && !databaseUrl && !hasSqlConfig && dialect === 'sqlite') {
+    throw new Error(
+      'No hay configuración de base de datos para producción. Define DATABASE_URL o DB_HOST/DB_USER/DB_NAME con DB_DIALECT=mysql.'
+    );
+  }
+
   if (dialect === 'sqlite') {
-    const dataDir = path.join(__dirname, 'data');
+    const dataDir = isProduction
+      ? path.join('/tmp', 'ctp-platanar-backend', 'data')
+      : path.join(__dirname, 'data');
+
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
     const storage = path.join(dataDir, 'database.sqlite');
     sequelize = new Sequelize({ dialect: 'sqlite', storage, logging: false });

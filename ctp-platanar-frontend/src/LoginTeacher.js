@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { teacherAPI } from './utils/api';
 
 function LoginTeacher({ onLogin, onSwitch }) {
   const [email, setEmail] = useState('');
@@ -8,7 +8,7 @@ function LoginTeacher({ onLogin, onSwitch }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/teachers/login', { email, password });
+      const res = await teacherAPI.login(email, password);
       onLogin(res.data);
     } catch (err) {
       alert("Error al iniciar sesión");

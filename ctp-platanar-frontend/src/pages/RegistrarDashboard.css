@@ -11,6 +11,9 @@
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
   padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .registrar-header h2 {
@@ -19,6 +22,25 @@
   font-size: 28px;
   border: none;
   padding: 0;
+}
+
+.registrar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-secondary {
+  padding: 12px 18px;
+  background: #ffffff33;
+  border: 1px solid rgba(255,255,255,0.7);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
 }
 
 .header-subtitle {

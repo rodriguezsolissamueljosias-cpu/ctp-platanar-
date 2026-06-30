@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from './utils/api';
 import './AttendanceDashboard.css';
 
 function AttendanceDashboard({ teacher }) {
@@ -7,7 +7,7 @@ function AttendanceDashboard({ teacher }) {
 
   useEffect(() => {
     if (teacher && teacher.teacherId) {
-      axios.get(`http://localhost:5000/api/students/${teacher.teacherId}`)
+      apiClient.get(`/students/${teacher.teacherId}`)
         .then(res => setStudents(res.data))
         .catch(err => console.error("Error al cargar historial:", err));
     }

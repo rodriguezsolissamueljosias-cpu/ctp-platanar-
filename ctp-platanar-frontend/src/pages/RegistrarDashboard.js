@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { studentAPI, gradeAPI, sectionAPI } from '../utils/api';
 import './RegistrarDashboard.css';
 
 export default function RegistrarDashboard({ teacher }) {
-  const [students, setStudents] = useState([]);
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('');
   const [section, setSection] = useState('');
@@ -11,36 +11,33 @@ export default function RegistrarDashboard({ teacher }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [sections, setSections] = useState([]);
-  const [grades, setGrades] = useState([]);
+  const [grades, setGrades] = useState([
+    { id: 'grade-a', name: 'A' },
+    { id: 'grade-b', name: 'B' }
+  ]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetch = async () => {
-      if (!teacher) return;
-      setLoading(true);
-      try {
-        const res = await studentAPI.getByTeacher(teacher.teacherId);
-        setStudents(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-    // cargar grados y secciones
     const loadLists = async () => {
       try {
         const [gRes, sRes] = await Promise.all([gradeAPI.getAll(), sectionAPI.getAll()]);
-          setGrades(gRes.data.map(g => ({ id: g.id, name: g.name })));
-          setSections(sRes.data.map(s => ({ id: s.id, name: s.name })));
-          if (!grade && gRes.data[0]) setGrade(gRes.data[0].name);
-          if (!section && sRes.data[0]) setSection(sRes.data[0].name);
+        const loadedGrades = (gRes?.data || []).map(g => ({ id: g.id, name: g.name }));
+        const loadedSections = (sRes?.data || []).map(s => ({ id: s.id, name: s.name }));
+
+        setGrades(loadedGrades.length > 0 ? loadedGrades : [
+          { id: 'grade-a', name: 'A' },
+          { id: 'grade-b', name: 'B' }
+        ]);
+        setSections(loadedSections);
+
+        setGrade(current => current || (loadedGrades[0] ? loadedGrades[0].name : 'A'));
+        setSection(current => current || (loadedSections[0] ? loadedSections[0].name : ''));
       } catch (err) {
         console.error('Error loading grades/sections', err);
       }
     };
     loadLists();
-  }, [teacher, grade, section]);
+  }, []);
 
   const addStudent = async () => {
     if (!name || !grade || !section || !parentEmail) {
@@ -49,14 +46,13 @@ export default function RegistrarDashboard({ teacher }) {
       return;
     }
     try {
-      const res = await studentAPI.create({ 
+      await studentAPI.create({ 
         name, 
         grade, 
         section, 
         parentEmail, 
         teacherId: teacher.teacherId 
       });
-      setStudents(prev => [...prev, res.data]);
       setName('');
       setGrade(grades[0] ? grades[0].name : '');
       setSection(sections[0] ? sections[0].name : '');
@@ -70,20 +66,6 @@ export default function RegistrarDashboard({ teacher }) {
     }
   };
 
-  const handleDelete = async (studentId) => {
-    if (!window.confirm('¿Seguro que desea eliminar este estudiante?')) return;
-    try {
-      await studentAPI.delete(studentId);
-      setStudents(prev => prev.filter(s => s.id !== studentId));
-      setMessage('✓ Estudiante eliminado');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (err) {
-      console.error(err);
-      setMessage('✕ Error al eliminar estudiante');
-      setTimeout(() => setMessage(''), 3000);
-    }
-  };
-
   return (
     <div className="registrar-dashboard">
       <div className="container">
@@ -91,6 +73,11 @@ export default function RegistrarDashboard({ teacher }) {
           <div>
             <h2>📝 Registrador de Estudiantes</h2>
             <p className="header-subtitle">Agrega nuevos estudiantes al sistema</p>
+          </div>
+          <div className="registrar-actions">
+            <button className="btn-secondary" onClick={() => navigate('/registrados')}>
+              📋 Estudiantes Registrados
+            </button>
           </div>
         </div>
 
@@ -155,48 +142,6 @@ export default function RegistrarDashboard({ teacher }) {
           {message && <div className="message">{message}</div>}
         </div>
 
-        <div className="students-section">
-          <h3>📋 Estudiantes Registrados ({students.length})</h3>
-
-          {loading ? (
-            <div className="loading">
-              <p>⏳ Cargando estudiantes...</p>
-            </div>
-          ) : students.length === 0 ? (
-            <div className="empty-state">
-              <p>🎓 No hay estudiantes registrados aún</p>
-            </div>
-          ) : (
-            <div className="table-wrapper">
-              <table className="students-table">
-                <thead>
-                  <tr>
-                    <th>👤 Nombre</th>
-                    <th>📖 Grado</th>
-                    <th>🏢 Sección</th>
-                    <th>📧 Correo Padres</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((s, idx) => (
-                    <tr key={s.id} className={idx % 2 === 0 ? 'even' : 'odd'}>
-                      <td className="student-name">{s.name}</td>
-                      <td>{s.grade}</td>
-                      <td>
-                        <span className="section-badge">{s.section}</span>
-                      </td>
-                      <td className="email">{s.parentEmail}</td>
-                      <td>
-                        <button style={{ background: '#f5576c', color: '#fff' }} onClick={() => handleDelete(s.id)}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

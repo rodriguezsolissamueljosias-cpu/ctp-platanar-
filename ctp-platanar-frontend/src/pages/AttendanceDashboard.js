@@ -1,35 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { studentAPI, attendanceAPI } from '../utils/api';
+import { studentAPI } from '../utils/api';
 import './AttendanceDashboard.css';
 
-export default function AttendanceDashboard({ section }) {
+export default function AttendanceDashboard({ section, teacher }) {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [marked, setMarked] = useState({});
-  const teacherId = 1;
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const teacherId = teacher?.teacherId || 1;
 
   useEffect(() => {
-    if (section) {
-      setLoading(true);
-      studentAPI.getByTeacher(teacherId)
-        .then(res => {
-          const filtered = res.data.filter(s => s.section === section);
-          setStudents(filtered);
-          setMarked({});
-        })
-        .catch(err => console.error('Error al obtener estudiantes:', err))
-        .finally(() => setLoading(false));
-    }
-  }, [section]);
+    if (!section) return;
+
+    setLoading(true);
+    studentAPI.getByTeacher(teacherId)
+      .then(res => {
+        const filtered = res.data.filter(s => s.section === section);
+        setStudents(filtered);
+        setMarked({});
+      })
+      .catch(err => console.error('Error al obtener estudiantes:', err))
+      .finally(() => setLoading(false));
+  }, [section, teacherId]);
 
   const markAttendance = async (studentId, status) => {
     try {
-      await attendanceAPI.create({
-        studentId,
-        date: new Date().toISOString().split('T')[0],
-        status
+      const res = await studentAPI.markAttendance(studentId, {
+        status,
+        teacherId,
+        date: new Date().toISOString()
       });
       setMarked(prev => ({ ...prev, [studentId]: status }));
+
+      if (res.data.smtpError) {
+        setNotificationMessage(`❌ Asistencia registrada, pero el correo no pudo enviarse: ${res.data.smtpError}`);
+      } else if (res.data.smtpConfigured) {
+        setNotificationMessage('✅ Asistencia registrada y notificación enviada correctamente.');
+      } else if (res.data.previewUrl) {
+        setNotificationMessage(`⚠️ Asistencia registrada. No había SMTP configurado. Vista previa: ${res.data.previewUrl}`);
+      } else {
+        setNotificationMessage('✅ Asistencia registrada. Notificación enviada.');
+      }
     } catch (err) {
       alert('Error al registrar asistencia: ' + (err.response?.data?.message || err.message));
       console.error(err);
@@ -88,6 +99,9 @@ export default function AttendanceDashboard({ section }) {
             <span className="stat-value">{absentCount}</span>
           </div>
         </div>
+        {notificationMessage && (
+          <div className="notification-message">{notificationMessage}</div>
+        )}
 
         {loading ? (
           <div className="loading">

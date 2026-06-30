@@ -23,6 +23,7 @@ export const teacherAPI = {
 export const studentAPI = {
   create: (studentData) => apiClient.post('/students', studentData),
   getByTeacher: (teacherId) => apiClient.get(`/students/${teacherId}`),
+  markAttendance: (studentId, attendanceData) => apiClient.put(`/students/${studentId}/attendance`, attendanceData),
   deleteAll: () => apiClient.delete('/students'),
   delete: (id) => apiClient.delete(`/students/${id}`)
 };

@@ -96,6 +96,16 @@
   color: #f5576c;
 }
 
+.notification-message {
+  margin: 20px 30px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #fff4e5;
+  border: 1px solid #ffa94d;
+  color: #7a4b00;
+  font-weight: 600;
+}
+
 /* ===== LOADING ===== */
 .loading {
   padding: 60px 30px;

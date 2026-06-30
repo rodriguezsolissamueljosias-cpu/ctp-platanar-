@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/api';
 
 function Attendance({ students }) {
   const [records, setRecords] = useState([]);
@@ -8,7 +8,7 @@ function Attendance({ students }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/attendance');
+        const res = await apiClient.get('/attendance');
         setRecords(res.data);
       } catch (err) {
         console.error(err);
@@ -29,7 +29,7 @@ function Attendance({ students }) {
 
   const updateStatus = async (recordId, newStatus) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/attendance/${recordId}`, {
+      const res = await apiClient.put(`/attendance/${recordId}`, {
         status: newStatus
       });
       setRecords(records.map(r => r.id === recordId ? res.data : r));

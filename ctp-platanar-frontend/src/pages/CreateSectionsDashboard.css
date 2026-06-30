@@ -1,0 +1,95 @@
+.create-sections-dashboard {
+  width: 100%;
+}
+
+.create-sections-dashboard .container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.create-sections-dashboard .dashboard-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+}
+
+.create-sections-dashboard .dashboard-header h2 {
+  color: white;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+}
+
+.create-sections-dashboard .dashboard-actions {
+  padding: 20px 30px;
+  background: #f8f9ff;
+}
+
+.create-sections-dashboard .card-section {
+  padding: 24px 30px 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.create-sections-dashboard .card-section h3 {
+  color: #667eea;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.create-sections-dashboard .section-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.create-sections-dashboard .section-input {
+  min-width: 240px;
+  padding: 10px 14px;
+  border: 2px solid #667eea;
+  border-radius: 10px;
+}
+
+.create-sections-dashboard .section-error {
+  margin-top: 12px;
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.create-sections-dashboard .section-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.create-sections-dashboard .section-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafbff;
+}
+
+.create-sections-dashboard .btn-primary,
+.create-sections-dashboard .btn-danger {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.create-sections-dashboard .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.create-sections-dashboard .btn-danger {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}

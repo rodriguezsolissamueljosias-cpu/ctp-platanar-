@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/api';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
 
   // Cargar lista de estudiantes al iniciar
   useEffect(() => {
-    axios.get('http://localhost:5000/api/students')
+    apiClient.get('/students')
       .then(res => setStudents(res.data))
       .catch(err => console.error(err));
   }, []);
 
   // Función para marcar asistencia
   const marcarAsistencia = (studentId, estado) => {
-    axios.put(`http://localhost:5000/api/students/${studentId}/attendance`, { status: estado })
+    apiClient.put(`/students/${studentId}/attendance`, { status: estado, date: new Date().toISOString() })
       .then(res => {
         alert(res.data.message);
         // Actualizar lista después de marcar (si backend devuelve student actualizado)
@@ -32,7 +32,7 @@ const StudentList = () => {
   // Eliminar estudiante
   const deleteStudent = (studentId) => {
     if (!window.confirm('¿Seguro que desea eliminar este estudiante?')) return;
-    axios.delete(`http://localhost:5000/api/students/${studentId}`)
+    apiClient.delete(`/students/${studentId}`)
       .then(() => {
         setStudents(prev => prev.filter(s => s.id !== studentId));
       })

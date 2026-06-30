@@ -63,6 +63,14 @@ ctp-platanar/
    npm run dev        # Desarrollo (con nodemon)
    ```
 
+   Si quieres que el backend escuche en toda la red y acepte peticiones solo desde tu frontend, configura estas variables antes de iniciar:
+   ```bash
+   $env:HOST="0.0.0.0"
+   $env:PORT="5000"
+   $env:FRONTEND_ORIGINS="http://192.168.1.20:3000,http://localhost:3000"
+   ```
+   Reemplaza la IP por la del equipo donde estará el frontend. Luego arranca el backend con `npm start`.
+
 ### Ejecutar todo desde la raíz del repositorio
 1. Instala dependencias desde la raíz:
    ```bash

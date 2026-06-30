@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { teacherAPI } from './utils/api';
 
 function RegisterTeacher({ onRegister, onSwitch }) {
   const [teacherId, setTeacherId] = useState('');
@@ -12,7 +12,7 @@ function RegisterTeacher({ onRegister, onSwitch }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/teachers', {
+      const res = await teacherAPI.register({
         teacherId,
         name,
         phone,
