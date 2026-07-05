@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import './App.css';
 
 import TeacherProfile from './components/TeacherProfile';
@@ -9,11 +9,12 @@ import StudentsDashboard from './pages/StudentsDashboard';
 import RegistrarDashboard from './pages/RegistrarDashboard';
 import CreateSectionsDashboard from './pages/CreateSectionsDashboard';
 import RegisteredStudentsDashboard from './pages/RegisteredStudentsDashboard';
+import ParentPortal from './pages/ParentPortal';
 import Settings from './components/Settings';
 import Login from './components/Login';
 import Register from './components/Register';
 
-function App() {
+function AppContent() {
   const [teacher, setTeacher] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('teacher') || 'null');
@@ -25,16 +26,17 @@ function App() {
   const [schoolLogo, setSchoolLogo] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [onboardingMode, setOnboardingMode] = useState('register');
+  const location = useLocation();
+  const isParentRoute = location.pathname === '/parents' || location.pathname === '/portal-padres' || location.pathname.startsWith('/parents/') || location.pathname.startsWith('/portal-padres/');
 
   useEffect(() => {
-    // Cargar logo almacenado
     const saved = localStorage.getItem('schoolLogo');
     if (saved) setSchoolLogo(saved);
   }, []);
 
   return (
-    <Router>
-      <div className="app-container">
+    <div className="app-container">
+      {!isParentRoute && (
         <header className="navbar">
           <div className="navbar-top">
             <div className="navbar-left">
@@ -78,45 +80,57 @@ function App() {
             <Link to="/justifications" className="nav-link">
               📋 Justificaciones
             </Link>
+            <Link to="/parents" className="nav-link">
+              👨‍👩‍👧‍👦 Portal Padres
+            </Link>
           </nav>
         </header>
+      )}
 
-        {showSettings && (
-          <div className="settings-modal">
-            <button className="close-btn" onClick={() => setShowSettings(false)}>✕</button>
-            <Settings onLogoUpload={setSchoolLogo} currentLogo={schoolLogo} />
+      {!isParentRoute && showSettings && (
+        <div className="settings-modal">
+          <button className="close-btn" onClick={() => setShowSettings(false)}>✕</button>
+          <Settings onLogoUpload={setSchoolLogo} currentLogo={schoolLogo} />
+        </div>
+      )}
+
+      <main>
+        {!isParentRoute && !teacher && (
+          <div className="onboarding-overlay">
+            <div className="onboarding-card">
+              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                <button onClick={() => setOnboardingMode('register')} className={onboardingMode==='register' ? 'active' : ''}>Registro</button>
+                <button onClick={() => setOnboardingMode('login')} className={onboardingMode==='login' ? 'active' : ''}>Iniciar Sesión</button>
+              </div>
+              {onboardingMode === 'register' ? (
+                <Register setTeacher={setTeacher} />
+              ) : (
+                <Login setTeacher={setTeacher} />
+              )}
+              <p style={{ fontSize: 12, color: '#666', marginTop: 8 }}>Puedes inventar correo y contraseña; esto es solo para identificar tu sesión localmente.</p>
+            </div>
           </div>
         )}
+        <Routes>
+          <Route path="/" element={<StudentsDashboard teacher={teacher} setSection={setSection} section={section} />} />
+          <Route path="/sections" element={<CreateSectionsDashboard />} />
+          <Route path="/registrar" element={<RegistrarDashboard teacher={teacher} />} />
+          <Route path="/registrados" element={<RegisteredStudentsDashboard teacher={teacher} />} />
+          <Route path="/attendance" element={<AttendanceDashboard section={section} teacher={teacher} />} />
+          <Route path="/justifications" element={<JustificationDashboard section={section} />} />
+          <Route path="/parents" element={<ParentPortal />} />
+          <Route path="/portal-padres" element={<ParentPortal />} />
+          <Route path="/profile" element={<TeacherProfile teacher={teacher} setSection={setSection} />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
 
-        <main>
-          {/* Onboarding modal: register/login shown when no teacher is persisted */}
-          {!teacher && (
-            <div className="onboarding-overlay">
-              <div className="onboarding-card">
-                <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                  <button onClick={() => setOnboardingMode('register')} className={onboardingMode==='register' ? 'active' : ''}>Registro</button>
-                  <button onClick={() => setOnboardingMode('login')} className={onboardingMode==='login' ? 'active' : ''}>Iniciar Sesión</button>
-                </div>
-                {onboardingMode === 'register' ? (
-                  <Register setTeacher={setTeacher} />
-                ) : (
-                  <Login setTeacher={setTeacher} />
-                )}
-                <p style={{ fontSize: 12, color: '#666', marginTop: 8 }}>Puedes inventar correo y contraseña; esto es solo para identificar tu sesión localmente.</p>
-              </div>
-            </div>
-          )}
-          <Routes>
-            <Route path="/" element={<StudentsDashboard teacher={teacher} setSection={setSection} section={section} />} />
-            <Route path="/sections" element={<CreateSectionsDashboard />} />
-            <Route path="/registrar" element={<RegistrarDashboard teacher={teacher} />} />
-            <Route path="/registrados" element={<RegisteredStudentsDashboard teacher={teacher} />} />
-            <Route path="/attendance" element={<AttendanceDashboard section={section} teacher={teacher} />} />
-            <Route path="/justifications" element={<JustificationDashboard section={section} />} />
-            <Route path="/profile" element={<TeacherProfile teacher={teacher} setSection={setSection} />} />
-          </Routes>
-        </main>
-      </div>
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

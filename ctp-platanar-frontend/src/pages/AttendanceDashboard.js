@@ -32,15 +32,7 @@ export default function AttendanceDashboard({ section, teacher }) {
       });
       setMarked(prev => ({ ...prev, [studentId]: status }));
 
-      if (res.data.smtpError) {
-        setNotificationMessage(`❌ Asistencia registrada, pero el correo no pudo enviarse: ${res.data.smtpError}`);
-      } else if (res.data.smtpConfigured) {
-        setNotificationMessage('✅ Asistencia registrada y notificación enviada correctamente.');
-      } else if (res.data.previewUrl) {
-        setNotificationMessage(`⚠️ Asistencia registrada. No había SMTP configurado. Vista previa: ${res.data.previewUrl}`);
-      } else {
-        setNotificationMessage('✅ Asistencia registrada. Notificación enviada.');
-      }
+      setNotificationMessage('✅ Asistencia registrada correctamente.');
     } catch (err) {
       alert('Error al registrar asistencia: ' + (err.response?.data?.message || err.message));
       console.error(err);
@@ -63,6 +55,7 @@ export default function AttendanceDashboard({ section, teacher }) {
       case 'Presente': return '#4facfe';
       case 'Tarde': return '#fa709a';
       case 'Ausente': return '#f5576c';
+      case 'Escapando': return '#ff5f6d';
       case 'Justificado': return '#ffa400';
       default: return '#999';
     }
@@ -152,6 +145,13 @@ export default function AttendanceDashboard({ section, teacher }) {
                     disabled={marked[s.id] === 'Ausente'}
                   >
                     ✕ Ausente
+                  </button>
+                  <button 
+                    className="btn-absent"
+                    onClick={() => markAttendance(s.id, 'Escapando')}
+                    disabled={marked[s.id] === 'Escapando'}
+                  >
+                    🏃 Escapando
                   </button>
                   <button 
                     className="btn-justified"

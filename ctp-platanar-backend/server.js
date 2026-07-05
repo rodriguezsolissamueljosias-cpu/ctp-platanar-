@@ -11,6 +11,7 @@ require('./models/Student');
 require('./models/Attendance');
 require('./models/Grade');
 require('./models/Section');
+require('./models/Parent');
 
 // Importar rutas
 const teacherRoutes = require('./routes/teachers');
@@ -18,6 +19,7 @@ const studentRoutes = require('./routes/students');
 const attendanceRoutes = require('./routes/attendance');
 const gradeRoutes = require('./routes/grades');
 const sectionRoutes = require('./routes/sections');
+const parentRoutes = require('./routes/parents');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -51,6 +53,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/sections', sectionRoutes);
+app.use('/api/parents', parentRoutes);
 
 // Manejador de errores de JSON malformado (body-parser / express.json)
 app.use((err, req, res, next) => {

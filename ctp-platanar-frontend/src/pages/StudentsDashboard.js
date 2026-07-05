@@ -155,7 +155,7 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
                   <th>👤 Nombre</th>
                   <th>📖 Grado</th>
                   <th>🏢 Sección</th>
-                  <th>📧 Correo Padres</th>
+                  <th>🆔 ID</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -167,7 +167,7 @@ export default function StudentsDashboard({ teacher, setSection, section }) {
                     <td>
                       <span className="section-badge">{s.section}</span>
                     </td>
-                    <td className="email">{s.parentEmail || 'N/A'}</td>
+                    <td className="email">{s.studentId || 'N/A'}</td>
                     <td>
                       <button style={{ background: '#f5576c', color: '#fff' }} onClick={() => handleDelete(s.id)}>Eliminar</button>
                     </td>

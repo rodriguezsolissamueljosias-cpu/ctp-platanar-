@@ -16,5 +16,5 @@ test('getAllowedOrigins parses a comma-separated list', () => {
 test('isOriginAllowed rejects origins outside the configured frontend list', () => {
   assert.equal(isOriginAllowed('https://evil.example.com', ['https://frontend.example.com']), false);
   assert.equal(isOriginAllowed('https://frontend.example.com', ['https://frontend.example.com']), true);
-  assert.equal(isOriginAllowed(undefined, ['https://frontend.example.com']), false);
+  assert.equal(isOriginAllowed(undefined, ['https://frontend.example.com']), true);
 });

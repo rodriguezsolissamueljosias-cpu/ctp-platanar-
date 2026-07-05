@@ -7,7 +7,7 @@ export default function RegistrarDashboard({ teacher }) {
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('');
   const [section, setSection] = useState('');
-  const [parentEmail, setParentEmail] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [sections, setSections] = useState([]);
@@ -40,7 +40,7 @@ export default function RegistrarDashboard({ teacher }) {
   }, []);
 
   const addStudent = async () => {
-    if (!name || !grade || !section || !parentEmail) {
+    if (!name || !grade || !section || !studentId) {
       setMessage('⚠️ Completa todos los campos');
       setTimeout(() => setMessage(''), 3000);
       return;
@@ -50,13 +50,13 @@ export default function RegistrarDashboard({ teacher }) {
         name, 
         grade, 
         section, 
-        parentEmail, 
+        studentId,
         teacherId: teacher.teacherId 
       });
       setName('');
       setGrade(grades[0] ? grades[0].name : '');
       setSection(sections[0] ? sections[0].name : '');
-      setParentEmail('');
+      setStudentId('');
       setMessage('✓ Estudiante agregado correctamente');
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
@@ -124,13 +124,13 @@ export default function RegistrarDashboard({ teacher }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">📧 Correo de Padres</label>
+              <label htmlFor="studentId">🆔 ID del estudiante</label>
               <input 
-                id="email"
-                type="email" 
-                placeholder="correo@ejemplo.com" 
-                value={parentEmail} 
-                onChange={e => setParentEmail(e.target.value)} 
+                id="studentId"
+                type="text" 
+                placeholder="Ej: 1001" 
+                value={studentId} 
+                onChange={e => setStudentId(e.target.value)} 
               />
             </div>
           </div>

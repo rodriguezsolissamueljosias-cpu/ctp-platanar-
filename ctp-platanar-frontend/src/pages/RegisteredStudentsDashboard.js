@@ -71,7 +71,7 @@ export default function RegisteredStudentsDashboard({ teacher }) {
                     <th>👤 Nombre</th>
                     <th>📖 Grado</th>
                     <th>🏢 Sección</th>
-                    <th>📧 Correo Padres</th>
+                    <th>🆔 ID</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -81,7 +81,7 @@ export default function RegisteredStudentsDashboard({ teacher }) {
                       <td className="student-name">{student.name}</td>
                       <td>{student.grade}</td>
                       <td><span className="section-badge">{student.section}</span></td>
-                      <td className="email">{student.parentEmail || 'N/A'}</td>
+                      <td className="email">{student.studentId || 'N/A'}</td>
                       <td>
                         <button className="btn-danger" onClick={() => handleDelete(student.id)}>Eliminar</button>
                       </td>

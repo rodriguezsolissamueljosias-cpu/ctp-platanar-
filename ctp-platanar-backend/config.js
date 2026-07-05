@@ -19,7 +19,7 @@ function getListenHost(value = process.env.HOST || process.env.BIND_HOST) {
 
 function isOriginAllowed(origin, allowedOrigins = getAllowedOrigins()) {
   if (!origin) {
-    return false;
+    return true;
   }
 
   return allowedOrigins.includes(origin);

@@ -10,7 +10,7 @@ const Attendance = sequelize.define('Attendance', {
     defaultValue: DataTypes.NOW
   },
   status: {
-    type: DataTypes.ENUM('Presente', 'Tarde', 'Ausente', 'Justificado'),
+    type: DataTypes.ENUM('Presente', 'Tarde', 'Ausente', 'Escapando', 'Justificado'),
     allowNull: false
   },
   subject: { type: DataTypes.STRING },
