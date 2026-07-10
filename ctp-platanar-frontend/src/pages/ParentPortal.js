@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function ParentPortal() {
@@ -9,6 +10,16 @@ export default function ParentPortal() {
   const [parentId, setParentId] = useState('');
   const [portal, setPortal] = useState(null);
   const [message, setMessage] = useState('');
+  const [showTeacherLink, setShowTeacherLink] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedTeacher = JSON.parse(localStorage.getItem('teacher') || 'null');
+      setShowTeacherLink(Boolean(savedTeacher));
+    } catch (error) {
+      setShowTeacherLink(false);
+    }
+  }, []);
 
   const addChild = () => setChildren([...children, { name: '', studentId: '' }]);
   const updateChild = (index, field, value) => {
@@ -42,6 +53,13 @@ export default function ParentPortal() {
 
   return (
     <div style={{ maxWidth: 720, margin: '24px auto', padding: 24, background: '#fff', borderRadius: 16 }}>
+      {showTeacherLink && (
+        <div style={{ marginBottom: 16 }}>
+          <Link to="/" style={{ display: 'inline-block', padding: '10px 14px', background: '#2563eb', color: '#fff', borderRadius: 8, textDecoration: 'none' }}>
+            Volver al panel de profesores
+          </Link>
+        </div>
+      )}
       <h2>Portal de Padres</h2>
       <p>Registra tu nombre, apellido y el ID de cada hijo para ver su seguimiento.</p>
       <div style={{ background: '#f7f9fc', padding: 12, borderRadius: 12, marginBottom: 16 }}>
