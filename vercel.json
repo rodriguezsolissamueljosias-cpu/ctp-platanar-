@@ -1,5 +1,17 @@
 {
   "version": 2,
+  "builds": [
+    { "src": "ctp-platanar-frontend/package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } },
+    { "src": "ctp-platanar-backend/package.json", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "ctp-platanar-backend/api.js" },
+    { "src": "/static/(.*)", "dest": "/ctp-platanar-frontend/build/static/$1" },
+    { "src": "/(.*)", "dest": "/ctp-platanar-frontend/build/index.html" }
+  ]
+}
+{
+  "version": 2,
   "installCommand": "npm run install-deps",
   "buildCommand": "npm run build-frontend",
   "builds": [
