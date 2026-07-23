@@ -10,3 +10,4 @@ if (-not (Test-Path 'node_modules')) {
 Write-Host 'Frontend iniciado. Se abrirá en tu navegador automáticamente.' -ForegroundColor Green
 Write-Host ''
 npm start
+npm .\start-app.ps1
